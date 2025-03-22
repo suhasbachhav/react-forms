@@ -10,6 +10,8 @@ export default function Signup() {
         const terms = form.terms.checked;
         data.terms = terms;
         console.log(data);
+
+        event.target.reset();
     }
 
     return (
