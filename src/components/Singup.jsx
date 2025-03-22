@@ -1,12 +1,54 @@
 import { useState } from 'react';
+import { isEmail, hasMinLength, isNotEmpty, isEqualsToOtherValue } from '../util/validation';
 
 export default function Signup() {
   const [passwordsAreNotEqual, setPasswordsAreNotEqual] = useState(false);
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function signupAction(formData) {
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirm-password');
+    const firstName = formData.get('first-name');
+    const lastName = formData.get('last-name');
+    const role = formData.get('role');
+    const acquisition = formData.getAll('acquisition');
+    const terms = formData.get('terms');
 
-    const fd = new FormData(event.target);
+    let error = [];
+
+    if(!isEmail(email)) {
+      error.push('Please enter a valid email address.');
+    }
+
+    if(!isNotEmpty(password) || !hasMinLength(password, 6)) { 
+        error.push('Please enter a password.');
+    }
+
+    if(!isEqualsToOtherValue(password, confirmPassword)) {
+      error.push('Passwords must match.');
+    }
+
+    if(!isNotEmpty(firstName)) {
+      error.push('Please enter your first name.');
+    }
+
+    if(!isNotEmpty(lastName)) {
+      error.push('Please enter your last name.');
+    }
+
+    if(!isNotEmpty(role)) {
+      error.push('Please select a role.');
+    }
+
+    if(acquisition.length === 0) {
+        error.push('Please select how you found us.');
+    }
+
+    if(!terms) {
+      error.push('Please accept the terms and conditions.');
+    }
+
+/*     const fd = new FormData(event.target);
     const acquisitionChannel = fd.getAll('acquisition');
     const data = Object.fromEntries(fd.entries());
     data.acquisition = acquisitionChannel;
@@ -16,11 +58,11 @@ export default function Signup() {
       return;
     }
 
-    console.log(data);
+    console.log(data); */
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form action={signupAction}>
       <h2>Welcome on board!</h2>
       <p>We just need a little bit of data from you to get you started 🚀</p>
 
