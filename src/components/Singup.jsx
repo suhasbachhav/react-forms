@@ -48,7 +48,17 @@ export default function Signup() {
     }
 
     if(error.length > 0) {
-      return {error};
+      return {error,
+        entertedValue: {
+          email,
+          password,
+          firstName,
+          lastName,
+          role,
+          acquisition,
+          terms
+        }
+      };
     }
     return null;
 
@@ -63,7 +73,7 @@ export default function Signup() {
 
       <div className="control">
         <label htmlFor="email">Email</label>
-        <input id="email" type="email" name="email" required />
+        <input id="email" type="email" name="email" defaultValue={formState.entertedValue?.email} required />
       </div>
 
       <div className="control-row">
@@ -75,6 +85,7 @@ export default function Signup() {
             name="password"
             required
             minLength={6}
+            defaultValue={formState.entertedValue?.password} 
           />
         </div>
 
@@ -84,6 +95,7 @@ export default function Signup() {
             id="confirm-password"
             type="password"
             name="confirm-password"
+            defaultValue={formState.entertedValue?.password} 
             required
           />
          {/*  <div className="control-error">
@@ -97,12 +109,12 @@ export default function Signup() {
       <div className="control-row">
         <div className="control">
           <label htmlFor="first-name">First Name</label>
-          <input type="text" id="first-name" name="first-name" required />
+          <input type="text" id="first-name" name="first-name" required defaultValue={formState.entertedValue?.firstName} />
         </div>
 
         <div className="control">
           <label htmlFor="last-name">Last Name</label>
-          <input type="text" id="last-name" name="last-name" required />
+          <input type="text" id="last-name" name="last-name" required defaultValue={formState.entertedValue?.lastName} />
         </div>
       </div>
 
@@ -119,12 +131,13 @@ export default function Signup() {
 
       <fieldset>
         <legend>How did you find us?</legend>
-        <div className="control">
+        <div className="control" defaultValue={formState.entertedValue?.role}>
           <input
             type="checkbox"
             id="google"
             name="acquisition"
             value="google"
+            defaultChecked={formState.entertedValue?.acquisition?.includes('google')} 
           />
           <label htmlFor="google">Google</label>
         </div>
@@ -135,12 +148,15 @@ export default function Signup() {
             id="friend"
             name="acquisition"
             value="friend"
+            defaultChecked={formState.entertedValue?.acquisition?.includes('friend')}
           />
           <label htmlFor="friend">Referred by friend</label>
         </div>
 
         <div className="control">
-          <input type="checkbox" id="other" name="acquisition" value="other" />
+          <input type="checkbox" id="other" name="acquisition" value="other" 
+            defaultChecked={formState.entertedValue?.acquisition?.includes('other')}
+          />
           <label htmlFor="other">Other</label>
         </div>
       </fieldset>
