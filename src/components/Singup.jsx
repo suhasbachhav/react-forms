@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useActionState } from 'react';
 import { isEmail, hasMinLength, isNotEmpty, isEqualsToOtherValue } from '../util/validation';
 
 export default function Signup() {
-  const [passwordsAreNotEqual, setPasswordsAreNotEqual] = useState(false);
 
-  function signupAction(formData) {
+  function signupAction(prevFormState, formData) {
     const email = formData.get('email');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm-password');
@@ -48,21 +47,17 @@ export default function Signup() {
       error.push('Please accept the terms and conditions.');
     }
 
-/*     const fd = new FormData(event.target);
-    const acquisitionChannel = fd.getAll('acquisition');
-    const data = Object.fromEntries(fd.entries());
-    data.acquisition = acquisitionChannel;
-
-    if (data.password !== data['confirm-password']) {
-      setPasswordsAreNotEqual(true);
-      return;
+    if(error.length > 0) {
+      return {error};
     }
+    return null;
 
-    console.log(data); */
   }
 
+  const [formState, formAction] = useActionState(signupAction, {error:null});
+
   return (
-    <form action={signupAction}>
+    <form action={formAction}>
       <h2>Welcome on board!</h2>
       <p>We just need a little bit of data from you to get you started 🚀</p>
 
@@ -91,9 +86,9 @@ export default function Signup() {
             name="confirm-password"
             required
           />
-          <div className="control-error">
+         {/*  <div className="control-error">
             {passwordsAreNotEqual && <p>Passwords must match.</p>}
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -161,6 +156,10 @@ export default function Signup() {
           I agree to the terms and conditions
         </label>
       </div>
+
+      {formState.error && (<ul className='errors'>
+        {formState.error.map((error) => <li key={error}>{error}</li>)}
+      </ul>)}
 
       <p className="form-actions">
         <button type="reset" className="button button-flat">
